@@ -7,7 +7,7 @@ Trang bán hàng cho 3 sản phẩm: Smart Tivi Samsung QLED 55Q6F, 65Q6F và m�
 
 ## Xem thử
 
-- Bản chạy trực tiếp: *(điền link GitHub Pages vào đây sau khi bật)*
+- **Bản chạy trực tiếp: https://datwestlake.github.io/novatech-landing-page/**
 - Xem dưới máy: tải repo về, mở thẳng `index.html` bằng trình duyệt. Không cần cài gì.
 
 ## Rất mong được góp ý về

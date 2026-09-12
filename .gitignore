@@ -1,0 +1,9 @@
+# He dieu hanh
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# File tam khi chinh sua
+*.bak
+*.tmp
+_*.html

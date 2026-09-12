@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════════
+   ▼▼▼  SỬA TOÀN BỘ NỘI DUNG TRANG TẠI ĐÂY  ▼▼▼
+
+   Mọi thứ hiển thị trên trang đều lấy từ khối này: thông tin liên hệ,
+   danh sách sản phẩm, giá, ảnh, cam kết, nội dung so sánh.
+   Bạn KHÔNG cần đụng vào phần HTML bên dưới.
+
+   • Thêm sản phẩm  → copy một khối { ... } trong danh sách sanPham, dán thêm
+   • Thêm ảnh       → bỏ ảnh vào thư mục "images" rồi ghi "images/ten-anh.jpg"
+   • Đổi liên hệ    → sửa trong phần lienHe
+   • Đổi giá        → sửa giaCu / giaMoi. Viết theo MỘT trong hai cách:
+                          giaMoi: 9990000        (số trần, không dấu chấm)
+                          giaMoi: "9.990.000"    (có dấu chấm thì PHẢI bọc nháy kép)
+                      Viết 9.990.000 mà KHÔNG có nháy kép sẽ làm hỏng cả trang.
+                      % giảm giá trang tự tính, không cần nhập tay
+   ══════════════════════════════════════════════════════════════════════════ */
+
+const CAU_HINH = {
+
+  /* ─── 1. THƯƠNG HIỆU ────────────────────────────────────────────────── */
+  thuongHieu: {
+    ten: "NOVA",                 // phần chữ đậm
+    tenMau: "TECH",              // phần chữ màu
+    khauHieu: 'điện máy chuẩn "tech"',
+    logo: "images/logo-mark.png",        // dấu hiệu hexagon (dùng ở header, footer)
+    logoDayDu: "images/logo-full.png",   // logo đầy đủ cả chữ (dùng ở khối form)
+    gioiThieu: "Hệ thống phân phối điện máy chính hãng: Samsung, Hisense và các thương hiệu hàng đầu."
+  },
+
+  /* ─── 2. THÔNG TIN LIÊN HỆ ──────────────────────────────────────────── */
+  lienHe: {
+    hotline: "0928866567",              // hiển thị trên trang
+    hotlineBam: "0928866567",            // số dùng khi bấm gọi (không dấu cách)
+    zalo: "0928866567",                // để trống "" nếu không dùng Zalo
+    email: "cskh@novatech.vn",
+    diaChi: "Kho online Hà Đông",
+    gioLamViec: "8:00 – 21:00 tất cả các ngày",
+    facebook: ""                       // ví dụ "https://facebook.com/novatech"
+  },
+
+  /* ─── 3. CHƯƠNG TRÌNH KHUYẾN MÃI ────────────────────────────────────── */
+  khuyenMai: {
+    soGioDemNguoc: 24,                 // đồng hồ đếm ngược chạy bao nhiêu giờ
+    nhanNho: "Đại tiệc điện máy – Duy nhất 24 giờ",
+    tieuDe: "Nâng cấp không gian sống,",
+    tieuDeNhanManh: "giảm sốc đến 42%",
+    moTa: "Bộ 3 sản phẩm được săn đón nhất tháng này. Hàng chính hãng, bảo hành 24 tháng, miễn phí vận chuyển và lắp đặt tận nhà.",
+    giamToiDa: "42%",
+    soLieu: [
+      { nhan: "Tiết kiệm tối đa", giaTri: "9.610.000đ" },
+      { nhan: "Bảo hành",         giaTri: "24 tháng"   },
+      { nhan: "Giao & lắp đặt",   giaTri: "Miễn phí"   }
+    ]
+  },
+
+  /* ─── 4. DANH SÁCH SẢN PHẨM ─────────────────────────────────────────────
+     Thêm sản phẩm: copy nguyên một khối { ... } rồi dán thêm vào danh sách.
+     anh: đường dẫn ảnh, ví dụ "images/tivi-55.jpg".
+          Để trống "" thì trang dùng hình minh hoạ vẽ sẵn.
+     kieuMinhHoa: "tivi" hoặc "mayhutam" (chỉ dùng khi chưa có ảnh)
+     noiBat: true  → thẻ được làm nổi bật, có viền xanh
+     ──────────────────────────────────────────────────────────────────────── */
+  sanPham: [
+    {
+      ma: "55q6f",
+      ten: "Smart Tivi QLED Samsung 4K 55 inch QA55Q6FAAKXXV",
+      moTa: "55 inch · 4K · Thiết kế tràn viền",
+      anh: "images/samsung-q6f-1.webp",
+      anhThem: [
+        "images/samsung-q6f-2.webp",
+        "images/samsung-q6f-3.webp",
+        "images/samsung-q6f-4.webp",
+        "images/samsung-q6f-5.webp"
+      ],
+      kieuMinhHoa: "tivi",
+      giaCu: 15900000,
+      giaMoi: 9990000,
+      nhan: "",
+      noiBat: false,
+      uuDiem: [
+        "Chấm lượng tử QLED, màu sống động",
+        "Lý tưởng cho phòng 15–20 m²",
+        "Smart TV Tizen, kho ứng dụng lớn"
+      ]
+    },
+    {
+      ma: "65q6f",
+      ten: "Smart Tivi QLED Samsung 4K 65 inch QA65Q6FAAKXXV",
+      moTa: "65 inch · 4K · Thiết kế tràn viền",
+      // Dùng chung bộ ảnh với bản 55 inch vì hai máy cùng dòng Q6F, kiểu dáng giống nhau
+      anh: "images/samsung-q6f-1.webp",
+      anhThem: [
+        "images/samsung-q6f-2.webp",
+        "images/samsung-q6f-3.webp",
+        "images/samsung-q6f-4.webp",
+        "images/samsung-q6f-5.webp"
+      ],
+      kieuMinhHoa: "tivi",
+      giaCu: 22900000,
+      giaMoi: 12190000,
+      nhan: "Bán chạy nhất",
+      noiBat: true,
+      uuDiem: [
+        "Diện tích hiển thị lớn hơn khoảng 40%",
+        "Cảm giác rạp phim cho phòng trên 20 m²",
+        "Tặng kèm gói treo tường cao cấp"
+      ]
+    },
+    {
+      ma: "dh80n1t",
+      ten: "Hisense DH80N1T",
+      moTa: "Máy sấy bơm nhiệt 8kg",
+      anh: "images/dh80n1t-1.webp",     // ảnh chính hiện trên thẻ sản phẩm
+      anhThem: [                         // ảnh phụ -> hiện thành ô nhỏ bấm để xem
+        "images/dh80n1t-2.webp",
+        "images/dh80n1t-3.webp",
+        "images/dh80n1t-4.webp",
+        "images/dh80n1t-5.webp",
+        "images/dh80n1t-6.webp"
+      ],
+      kieuMinhHoa: "maysay",
+      giaCu: 9590000,
+      giaMoi: 7990000,
+      nhan: "",
+      noiBat: false,
+      uuDiem: [
+        "Bơm nhiệt sấy nhiệt độ thấp, không hại vải",
+        "Cảm biến Auto Dry, đủ khô là tự dừng",
+        "15 chương trình: Cotton, Wool, Quick 30'…"
+      ]
+    }
+  ],
+
+  /* ─── 5. PHẦN GIỚI THIỆU CÔNG NGHỆ (khối 1) ─────────────────────────── */
+  gioiThieuA: {
+    id: "samsung",
+    navNhan: "Samsung QLED",          // chữ ngắn hiện trên thanh menu
+    nhanNho: "Công nghệ Samsung QLED",
+    tieuDe: "Màu sắc bùng nổ. Chi tiết sắc như thật.",
+    moTa: "Tấm nền chấm lượng tử (Quantum Dot) tái tạo dải màu rộng ở mọi mức sáng – điều tivi LED thông thường khó làm được. Kết quả: sắc đỏ rực mà không cháy, xanh sâu mà không bệt, tông da người tự nhiên đúng như mắt nhìn.",
+    diemManh: [
+      { icon: "sparkle", tieuDe: "Dải màu rộng",        moTa: "Giữ đúng sắc độ ngay cả trong cảnh sáng chói." },
+      { icon: "tivi",    tieuDe: "Thiết kế tràn viền",  moTa: "Viền siêu mỏng, hình ảnh gần như phủ kín mặt trước." },
+      { icon: "chinh",   tieuDe: "Nâng cấp hình ảnh 4K", moTa: "Nội dung phân giải thấp được làm nét theo thời gian thực." },
+      { icon: "wifi",    tieuDe: "Smart TV Tizen",      moTa: "Netflix, YouTube, FPT Play… điều khiển bằng giọng nói." }
+    ]
+  },
+
+  /* ─── 6. BẢNG SO SÁNH 2 PHIÊN BẢN ───────────────────────────────────── */
+  soSanh: {
+    tieuDe: "Nên chọn 55 inch hay 65 inch?",
+    moTa: "Cùng công nghệ QLED – khác biệt nằm ở diện tích phòng và khoảng cách ngồi.",
+    cot: [
+      {
+        ten: "55Q6F", phu: "– 55 inch", the: "Tối ưu ngân sách", noiBat: false,
+        dong: [
+          { nhan: "Diện tích phòng",  giaTri: "15 – 20 m²" },
+          { nhan: "Khoảng cách ngồi", giaTri: "2,0 – 2,5 m" },
+          { nhan: "Phù hợp",          giaTri: "Căn hộ, phòng ngủ lớn" },
+          { nhan: "Giá sale",         giaTri: "10.990.000đ", nhanManh: true }
+        ]
+      },
+      {
+        ten: "65Q6F", phu: "– 65 inch", the: "Đáng tiền nhất", noiBat: true,
+        dong: [
+          { nhan: "Diện tích phòng",  giaTri: "Trên 20 m²" },
+          { nhan: "Khoảng cách ngồi", giaTri: "2,5 – 3,5 m" },
+          { nhan: "Phù hợp",          giaTri: "Phòng khách rộng, mê phim" },
+          { nhan: "Giá sale",         giaTri: "13.290.000đ", nhanManh: true }
+        ],
+        ghiChu: "Chỉ thêm 2,3 triệu để có diện tích hiển thị lớn hơn khoảng 40% – khác biệt thấy rõ ngay lần xem đầu tiên."
+      }
+    ]
+  },
+
+  /* ─── 7. PHẦN GIỚI THIỆU SẢN PHẨM (khối 2) ──────────────────────────── */
+  gioiThieuB: {
+    id: "hisense",
+    navNhan: "Hisense",               // chữ ngắn hiện trên thanh menu
+    nhanNho: "Hisense DH80N1T",
+    tieuDe: "Quần áo khô thơm sau mỗi mẻ. Không còn ngóng nắng.",
+    moTa: "Mưa dài ngày, nồm ẩm, chung cư không có chỗ phơi – quần áo treo hai ngày vẫn ẩm và ám mùi hôi. DH80N1T sấy khô 8kg đồ mỗi mẻ bằng công nghệ bơm nhiệt, lấy ra là gấp cất được ngay.",
+    diemManh: [
+      { icon: "giot",   tieuDe: "Công nghệ bơm nhiệt",  moTa: "Sấy tuần hoàn ở nhiệt độ thấp nên tiết kiệm điện hơn hẳn máy sấy đốt nóng thông thường, đồng thời không làm co rút hay xơ cứng sợi vải." },
+      { icon: "chinh",  tieuDe: "15 chương trình sấy",  moTa: "Cotton, Wool, Delicates, Shirts, Bedding, Towels, Sportswear… mỗi loại vải một chế độ riêng. Cần gấp thì có Quick 30 phút." },
+      { icon: "dongho", tieuDe: "Cảm biến Auto Dry",    moTa: "Máy tự đo độ ẩm trong lồng, đủ khô là tự dừng. Không sấy quá tay làm hỏng vải, cũng không tốn điện thừa." }
+    ],
+    khoiPhu: {
+      tieuDe: "Chăm được cả những món khó tính nhất",
+      moTa: "Chế độ Baby Care và Allergy Care xử lý đồ trẻ nhỏ, chăn ga gối – thứ mà phơi ngoài trời nồm không bao giờ khô kỹ. Anti Crease đảo nhẹ sau khi sấy xong nên đồ không bị hằn nếp dù bạn chưa kịp lấy ra.",
+      danhSach: [
+        "Hẹn giờ Delay End: đặt máy chạy đêm, sáng dậy có đồ khô",
+        "Không cần ống thoát khí, đặt được trong phòng kín hoặc tủ âm",
+        "Nước ngưng gom vào khay kéo ra đổ, không phải khoan tường"
+      ]
+    }
+  },
+
+  /* ─── 8. CAM KẾT / ĐIỂM CHẠM NIỀM TIN ───────────────────────────────────
+     icon dùng được: khien, dongho, xetai, nha, giot, sparkle, tivi, wifi, chinh
+     ──────────────────────────────────────────────────────────────────────── */
+  camKet: [
+    { icon: "khien",  tieuDe: "100% Chính hãng",      moTa: "Máy mới nguyên seal, đầy đủ tem và phiếu bảo hành hãng." },
+    { icon: "dongho", tieuDe: "Bảo hành 24 tháng",    moTa: "Bảo hành chính hãng tận nhà, hỗ trợ kỹ thuật trọn đời sản phẩm." },
+    { icon: "xetai",  tieuDe: "Miễn phí vận chuyển",  moTa: "Giao hàng toàn quốc 0đ phí. Nội thành nhận hàng trong 24 giờ." },
+    { icon: "nha",    tieuDe: "Lắp đặt tận nhà",      moTa: "Kỹ thuật viên treo tường, cân chỉnh hình ảnh và hướng dẫn sử dụng – miễn phí." }
+  ],
+
+  camKetPhu: [
+    "Thanh toán khi nhận hàng (COD)",
+    "Đổi mới trong 30 ngày nếu lỗi nhà sản xuất",
+    "Trả góp 0% qua thẻ tín dụng"
+  ],
+
+  /* ─── 9. FORM ĐẶT HÀNG ──────────────────────────────────────────────── */
+  form: {
+    nhanNho: "Bước cuối cùng",
+    tieuDe: "Để lại số điện thoại –",
+    tieuDeNhanManh: "giữ giá sốc trong 24h",
+    moTa: "Tư vấn viên gọi lại trong 5 phút để xác nhận model và địa chỉ. Bạn chỉ thanh toán khi hàng đã tới tận nhà.",
+    loiHua: [
+      "Không cần đặt cọc, không ràng buộc",
+      "Nhận báo giá kèm quà tặng chi tiết qua Zalo",
+      "Thông tin của bạn được bảo mật tuyệt đối"
+    ],
+    nutGui: "Đặt Hàng Ngay – Giữ Giá 24H",
+    ghiChuChanForm: "Bấm đặt hàng nghĩa là bạn đồng ý để chúng tôi liên hệ tư vấn. Hoàn toàn miễn phí, không phát sinh chi phí."
+  },
+
+  /* ─── 10. GHI CHÚ CHÂN TRANG ────────────────────────────────────────── */
+  chanTrang: "Hình ảnh mang tính minh hoạ. Giá và quà tặng có thể thay đổi theo từng thời điểm."
+};
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ▲▲▲  HẾT PHẦN CẦN SỬA. Từ đây trở xuống là code chạy trang.  ▲▲▲
+   ══════════════════════════════════════════════════════════════════════════ */
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đại Tiệc Điện Máy 24H – Samsung QLED Q6F &amp; Hisense DH80N1T</title>
+<meta name="description" content="Ưu đãi 24 giờ: Smart Tivi Samsung QLED 55Q6F & 65Q6F, máy sấy bơm nhiệt Hisense DH80N1T 8kg. 100% chính hãng, bảo hành 24 tháng, miễn phí vận chuyển & lắp đặt tận nhà.">
+<meta name="theme-color" content="#9D4436">
+
+<!-- ════════════════════════════════════════════════════════════════════
+     BẢN CHẠY THỬ: chặn Google lập chỉ mục trang này.
+     Giá và khuyến mãi hiện tại chưa phải giá thật, nếu để Google thu thập
+     thì khách có thể tìm thấy và hiểu nhầm.
+     ➜ XOÁ DÒNG DƯỚI ĐÂY khi chính thức vận hành.
+     ════════════════════════════════════════════════════════════════════ -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="apple-touch-icon" href="images/logo-mark.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<style type="text/tailwindcss">
+  @theme {
+    /* ── Giao diện SÁNG: nền trắng, xanh dương công nghệ, CTA cam/đỏ ── */
+    --color-bg:            #F8FAFC;
+    --color-surface:       #FFFFFF;
+    --color-tint:          #EFF6FF;
+    --color-line:          #E2E8F0;
+    --color-line-2:        #CBD5E1;
+
+    --color-primary:       #0369A1;
+    --color-primary-light: #0EA5E9;
+    --color-primary-dark:  #075985;
+
+    --color-cta:           #EA580C;
+    --color-cta-hot:       #DC2626;
+    --color-cta-dark:      #C2410C;
+
+    /* Đỏ đất lấy trực tiếp từ logo Novatech */
+    --color-brand:         #9D4436;
+    --color-brand-deep:    #832B21;
+
+    --color-fg:            #0F172A;
+    --color-fg-muted:      #475569;
+    --color-ok:            #059669;
+    --color-danger:        #B91C1C;
+    --color-dark:          #0F172A;
+
+    --font-display: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+    --font-body:    "Inter", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  @layer base {
+    body { background-color: var(--color-bg); color: var(--color-fg); font-family: var(--font-body); }
+    h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
+    :focus-visible { outline: 3px solid var(--color-primary-light); outline-offset: 3px; border-radius: 4px; }
+    section[id] { scroll-margin-top: 7rem; }
+    /* Bắt buộc: nếu không có dòng này, các class như "grid"/"flex" sẽ đè lên thuộc tính hidden */
+    [hidden] { display: none !important; }
+  }
+
+  @utility container-x { @apply mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-8; }
+  @utility font-display { font-family: var(--font-display); }
+
+  /* Nút CTA lớn: chữ 19px đậm = "large text", đạt chuẩn tương phản 3:1 */
+  @utility btn-cta {
+    @apply inline-flex min-h-[54px] cursor-pointer items-center justify-center gap-2 rounded-xl
+           px-7 text-[19px] font-bold text-white transition duration-200
+           hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0 active:brightness-95;
+    background-image: linear-gradient(135deg, var(--color-cta) 0%, var(--color-cta-hot) 100%);
+    box-shadow: 0 10px 26px -10px rgb(220 38 38 / .55);
+  }
+
+  /* Nút CTA nhỏ: chữ nhỏ nên dùng nền đậm hơn cho đủ tương phản 4.5:1 */
+  @utility btn-cta-sm {
+    @apply inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-lg
+           bg-cta-dark px-5 text-sm font-bold text-white transition duration-200 hover:bg-cta-hot;
+  }
+
+  @utility btn-ghost {
+    @apply inline-flex min-h-[54px] cursor-pointer items-center justify-center gap-2 rounded-xl border
+           border-line-2 bg-surface px-6 text-base font-semibold text-fg transition duration-200
+           hover:border-primary hover:bg-tint;
+  }
+
+  @utility card {
+    @apply rounded-2xl border border-line bg-surface shadow-[0_1px_3px_rgb(15_23_42/.06)];
+  }
+
+  @utility card-lift {
+    @apply card transition duration-300 hover:-translate-y-1
+           hover:border-primary-light hover:shadow-[0_18px_40px_-16px_rgb(15_23_42/.22)];
+  }
+
+  @utility eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-primary/25 bg-tint
+           px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-primary;
+  }
+
+  @utility field-base {
+    @apply min-h-[52px] w-full rounded-xl border border-line-2 bg-surface px-4 text-base text-fg
+           transition duration-200 placeholder:text-fg-muted/55 focus:border-primary focus:bg-tint;
+  }
+
+  .grid-bg {
+    background-image:
+      radial-gradient(50rem 30rem at 78% -12%, rgb(14 165 233 / .14), transparent 62%),
+      radial-gradient(34rem 24rem at 2% 4%, rgb(3 105 161 / .09), transparent 62%),
+      linear-gradient(to right, rgb(15 23 42 / .045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(15 23 42 / .045) 1px, transparent 1px);
+    background-size: auto, auto, 56px 56px, 56px 56px;
+  }
+
+  [aria-invalid="true"] { border-color: var(--color-cta-hot) !important; }
+
+  /* Popup xem ảnh lớn: dùng thuộc tính data-mo để bật/tắt, không dựa vào [hidden] */
+  #hopanh { display: none; }
+  #hopanh[data-mo="1"] { display: flex; }
+
+  @keyframes pulseGlow { 0%, 100% { opacity: .5 } 50% { opacity: 1 } }
+  .glow-dot { animation: pulseGlow 2s ease-in-out infinite; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .001ms !important; animation-iteration-count: 1 !important;
+      transition-duration: .001ms !important; scroll-behavior: auto !important;
+    }
+    .card-lift:hover, .btn-cta:hover { transform: none !important; }
+  }
+</style>
+</head>
+
+<body class="antialiased">
+
+<a href="#dat-hang" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-cta-dark focus:px-4 focus:py-3 focus:font-bold focus:text-white">Tới form đặt hàng</a>
+
+<!-- Toàn bộ nội dung bên dưới được dựng từ khối CAU_HINH ở đầu file -->
+<div id="app"></div>
+
+<noscript>
+  <div style="max-width:640px;margin:60px auto;padding:24px;border:1px solid #E2E8F0;border-radius:12px;font-family:sans-serif">
+    <h1 style="margin:0 0 8px">Cần bật JavaScript</h1>
+    <p style="color:#475569;margin:0">Trang này dựng nội dung bằng JavaScript. Vui lòng bật JavaScript trong trình duyệt rồi tải lại trang.</p>
+  </div>
+</noscript>
+
+<script>
+(function () {
+  "use strict";
+  try {
+
+  if (typeof CAU_HINH === "undefined") {
+    throw new Error("Khối CAU_HINH không đọc được — nhiều khả năng có lỗi cú pháp bên trong nó.");
+  }
+  var C = CAU_HINH;
+
+  /* ═══════════ TIỆN ÍCH ═══════════ */
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  // Chấp nhận cả 9990000 lẫn "9.990.000" / "9,990,000" / "9990000đ"
+  function soTien(v) {
+    if (typeof v === "number") return isFinite(v) ? v : null;
+    if (typeof v === "string") {
+      var n = parseInt(v.replace(/[^\d]/g, ""), 10);
+      return isFinite(n) ? n : null;
+    }
+    return null;
+  }
+
+  function tien(v) {
+    var n = soTien(v);
+    return n === null ? "" : n.toLocaleString("vi-VN") + "đ";
+  }
+
+  function phanTramGiam(cu, moi) {
+    var a = soTien(cu), b = soTien(moi);
+    if (!a || !b || a <= b) return null;
+    return Math.round((1 - b / a) * 100);
+  }
+
+  /* ═══════════ BỘ ICON (SVG, không dùng emoji) ═══════════ */
+  var D = {
+    khien:   '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/>',
+    dongho:  '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    xetai:   '<path d="M3 16V7a1 1 0 0 1 1-1h10v10H3Z"/><path d="M14 9h4l3 3v4h-7V9Z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>',
+    nha:     '<path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/>',
+    giot:    '<path d="M12 2.7s6 6 6 10.3a6 6 0 0 1-12 0C6 8.7 12 2.7 12 2.7Z"/>',
+    sparkle: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3Z"/>',
+    tivi:    '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+    wifi:    '<path d="M4 12a8 8 0 0 1 16 0M8 12a4 4 0 0 1 8 0M12 12v8"/>',
+    chinh:   '<circle cx="12" cy="12" r="3.5"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/>',
+    check:   '<path d="m20 6-11 11-5-5"/>',
+    phone:   '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/>',
+    tia:     '<path d="M13 2 3 14h8l-1 8 10-12h-8l1-8Z"/>',
+    mui:     '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    kinhlup: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M11 8v6M8 11h6"/>',
+    dong:    '<path d="M18 6 6 18M6 6l12 12"/>',
+    trai:    '<path d="m15 18-6-6 6-6"/>',
+    phai:    '<path d="m9 18 6-6-6-6"/>'
+  };
+
+  function icon(ten, cls) {
+    var d = D[ten] || D.check;
+    var fill = ten === "tia" || ten === "sparkle" ? 'fill="currentColor" stroke="none"' :
+               'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+    return '<svg viewBox="0 0 24 24" class="' + cls + '" ' + fill + ' aria-hidden="true">' + d + '</svg>';
+  }
+
+  var TICK = function (cls) {
+    return '<svg viewBox="0 0 24 24" class="' + cls + '" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + D.check + '</svg>';
+  };
+
+  /* ═══════════ DẤU HIỆU LOGO ═══════════
+     Dùng file ảnh logo nếu có. Nếu thiếu file / sai đường dẫn thì tự động
+     quay về hình hexagon vẽ bằng SVG, trang không bị vỡ. */
+  // Mỗi lần gọi phải có id gradient riêng, nếu trùng id thì SVG hiển thị sai
+  var demLogo = 0;
+  function hexagonDuPhong(cls) {
+    var g = "lgBrand" + (++demLogo);
+    return '<svg viewBox="0 0 48 52" class="' + cls + '" aria-hidden="true">' +
+      '<defs><linearGradient id="' + g + '" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0%" stop-color="#B8564A"/><stop offset="100%" stop-color="#832B21"/></linearGradient></defs>' +
+      '<path d="M24 1 45 13v26L24 51 3 39V13Z" fill="url(#' + g + ')" rx="4"/>' +
+      '<path d="M16 37V19l16 14V15" fill="none" stroke="#FFD9CC" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<circle cx="16" cy="19" r="2.4" fill="#FFD9CC"/><circle cx="32" cy="33" r="2.4" fill="#FFD9CC"/></svg>';
+  }
+
+  function dauHieu(cls) {
+    var fb = hexagonDuPhong(cls);
+    if (!C.thuongHieu.logo) return fb;
+    return '<img src="' + esc(C.thuongHieu.logo) + '" alt="" class="' + cls + ' shrink-0 object-contain" ' +
+           'onerror="this.hidden=true;this.nextElementSibling.hidden=false">' +
+           '<span hidden class="shrink-0">' + fb + '</span>';
+  }
+
+  /* ═══════════ HÌNH MINH HOẠ KHI CHƯA CÓ ẢNH THẬT ═══════════ */
+  function minhHoa(kieu, khoa) {
+    var g = "grad_" + khoa;
+    if (kieu === "maysay") {
+      return '<svg viewBox="0 0 300 180" class="mx-auto h-44 w-auto" role="img" aria-label="Hình minh hoạ máy sấy quần áo">' +
+        '<defs><linearGradient id="' + g + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E0F2FE"/><stop offset="100%" stop-color="#BAE6FD"/></linearGradient></defs>' +
+        '<rect x="76" y="8" width="148" height="164" rx="12" fill="url(#' + g + ')" stroke="#7DD3FC" stroke-width="2"/>' +
+        '<rect x="88" y="20" width="56" height="14" rx="4" fill="#FFFFFF" opacity=".85"/>' +
+        '<rect x="152" y="20" width="60" height="14" rx="4" fill="#0F172A"/>' +
+        '<text x="182" y="31" font-size="10" font-family="monospace" fill="#34D399" text-anchor="middle">03:20</text>' +
+        '<circle cx="150" cy="108" r="50" fill="#FFFFFF" stroke="#7DD3FC" stroke-width="2"/>' +
+        '<circle cx="150" cy="108" r="38" fill="#0369A1" opacity=".12"/>' +
+        '<circle cx="150" cy="108" r="38" fill="none" stroke="#0369A1" stroke-width="2" stroke-dasharray="5 7" opacity=".55"/>' +
+        '</svg>';
+    }
+    if (kieu === "mayhutam") {
+      return '<svg viewBox="0 0 300 180" class="mx-auto h-44 w-auto" role="img" aria-label="Hình minh hoạ máy hút ẩm">' +
+        '<defs><linearGradient id="' + g + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E0F2FE"/><stop offset="100%" stop-color="#BAE6FD"/></linearGradient></defs>' +
+        '<rect x="88" y="8" width="124" height="164" rx="16" fill="url(#' + g + ')" stroke="#7DD3FC" stroke-width="2"/>' +
+        '<g fill="#0369A1" opacity=".38"><rect x="108" y="26" width="84" height="6" rx="3"/><rect x="108" y="38" width="84" height="6" rx="3"/><rect x="108" y="50" width="84" height="6" rx="3"/></g>' +
+        '<rect x="110" y="70" width="80" height="36" rx="8" fill="#0F172A"/>' +
+        '<text x="150" y="94" font-size="18" font-family="monospace" fill="#34D399" text-anchor="middle">55%</text>' +
+        '<rect x="104" y="118" width="92" height="42" rx="8" fill="#FFFFFF" stroke="#7DD3FC"/>' +
+        '<rect x="104" y="142" width="92" height="18" rx="6" fill="#38BDF8" opacity=".5"/></svg>';
+    }
+    return '<svg viewBox="0 0 300 180" class="mx-auto h-44 w-auto" role="img" aria-label="Hình minh hoạ tivi">' +
+      '<defs><linearGradient id="' + g + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#38BDF8"/><stop offset="52%" stop-color="#0369A1"/><stop offset="100%" stop-color="#6D28D9"/></linearGradient></defs>' +
+      '<rect x="14" y="10" width="272" height="140" rx="7" fill="#0F172A"/>' +
+      '<rect x="18" y="14" width="264" height="132" rx="4" fill="url(#' + g + ')"/>' +
+      '<circle cx="86" cy="62" r="24" fill="#FDE68A" opacity=".9"/>' +
+      '<path d="M18 128 L92 84 L140 118 L188 80 L282 138 L282 142 a4 4 0 0 1 -4 4 H22 a4 4 0 0 1 -4 -4 Z" fill="#0F172A" opacity=".45"/>' +
+      '<rect x="128" y="150" width="44" height="9" rx="3" fill="#94A3B8"/>' +
+      '<rect x="95" y="159" width="110" height="8" rx="4" fill="#64748B"/></svg>';
+  }
+
+  /* Khoá định danh riêng cho từng chỗ đặt ảnh.
+     Cùng một sản phẩm có thể xuất hiện ở nhiều nơi (hero và thẻ sản phẩm),
+     nên phải ghép thêm vị trí, nếu không sẽ trùng id và bấm nhầm chỗ. */
+  function khoaAnh(sp, i) { return (sp.ma || "sp") + "-" + i; }
+
+  function anhSanPham(sp, i) {
+    var khoa = khoaAnh(sp, i);
+    var fb = minhHoa(sp.kieuMinhHoa, khoa);
+    if (!sp.anh) return fb;
+    // Bọc trong <button> để bấm (và Tab + Enter) mở được popup xem ảnh lớn
+    var ds = [sp.anh].concat(sp.anhThem || []).filter(Boolean);
+    return '<button type="button" class="group relative block w-full cursor-zoom-in rounded-lg" ' +
+             'data-phongto="' + esc(JSON.stringify(ds)) + '" data-ten="' + esc(sp.ten) + '" ' +
+             'aria-label="Phóng to ảnh ' + esc(sp.ten) + '">' +
+           '<img id="anhchinh-' + esc(khoa) + '" src="' + esc(sp.anh) + '" alt="' + esc(sp.ten) + '" loading="lazy" ' +
+             'class="mx-auto h-44 w-full object-contain" ' +
+             'onerror="this.hidden=true;this.nextElementSibling.hidden=false">' +
+           '<span hidden>' + fb + '</span>' +
+           '<span class="pointer-events-none absolute bottom-1 right-1 grid h-8 w-8 place-items-center rounded-lg ' +
+             'bg-fg/70 text-white opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100">' +
+             icon("kinhlup", "h-4 w-4") + '</span>' +
+           '</button>';
+  }
+
+  /* Dãy ô ảnh nhỏ. Chỉ hiện khi sản phẩm có từ 2 ảnh trở lên. */
+  function dayAnhNho(sp, i) {
+    if (!sp.anh) return '';
+    var ds = [sp.anh].concat(sp.anhThem || []).filter(Boolean);
+    if (ds.length < 2) return '';
+    var dich = 'anhchinh-' + khoaAnh(sp, i);
+    return '<div class="mt-3 flex flex-wrap justify-center gap-2">' + ds.map(function (src, k) {
+      return '<button type="button" data-anh="' + esc(src) + '" data-dich="' + esc(dich) + '" ' +
+        'aria-label="Xem ảnh ' + (k + 1) + ' của ' + esc(sp.ten) + '"' + (k === 0 ? ' aria-current="true"' : '') + ' ' +
+        'class="h-11 w-11 cursor-pointer overflow-hidden rounded-lg border-2 bg-white p-0.5 transition ' +
+        (k === 0 ? 'border-primary' : 'border-line hover:border-primary-light') + '">' +
+        '<img src="' + esc(src) + '" alt="" loading="lazy" class="h-full w-full object-contain" ' +
+        'onerror="this.closest(\'button\').remove()">' +
+        '</button>';
+    }).join('') + '</div>';
+  }
+
+  /* ═══════════ CÁC KHỐI GIAO DIỆN ═══════════ */
+
+  function theSanPham(sp, i) {
+    var giam = phanTramGiam(sp.giaCu, sp.giaMoi);
+    return '' +
+    '<article class="card-lift flex flex-col overflow-hidden' + (sp.noiBat ? ' border-primary-light ring-1 ring-primary-light/40' : '') + '">' +
+      (sp.nhan ? '<p class="bg-gradient-to-r from-primary-dark to-primary-light py-1.5 text-center text-xs font-extrabold uppercase tracking-wide text-white">' + esc(sp.nhan) + '</p>' : '') +
+      '<div class="relative bg-tint p-6">' +
+        (giam ? '<span class="absolute right-4 top-4 z-10 rounded-full bg-cta-hot px-2.5 py-1 text-[11px] font-extrabold text-white">-' + giam + '%</span>' : '') +
+        anhSanPham(sp, i) +
+        dayAnhNho(sp, i) +
+      '</div>' +
+      '<div class="flex flex-1 flex-col p-6">' +
+        '<h3 class="text-xl font-bold">' + esc(sp.ten) + '</h3>' +
+        '<p class="mt-1 text-sm text-fg-muted">' + esc(sp.moTa) + '</p>' +
+        '<ul class="mt-4 space-y-2 text-sm text-fg-muted">' +
+          (sp.uuDiem || []).map(function (u) {
+            return '<li class="flex gap-2">' + TICK("mt-0.5 h-4 w-4 shrink-0 text-ok") + esc(u) + '</li>';
+          }).join("") +
+        '</ul>' +
+        '<div class="mt-auto pt-6">' +
+          (sp.giaCu ? '<p class="text-sm text-fg-muted line-through">' + tien(sp.giaCu) + '</p>' : '') +
+          '<p class="font-display text-3xl font-extrabold text-cta-dark">' + tien(sp.giaMoi) + '</p>' +
+          '<a href="#dat-hang" data-chon="' + esc(sp.ten) + '" class="btn-cta mt-4 w-full">Mua Ngay</a>' +
+        '</div>' +
+      '</div>' +
+    '</article>';
+  }
+
+  function khoiDiemManh(list, cot) {
+    return '<div class="mt-8 grid gap-4 ' + cot + '">' + list.map(function (d) {
+      return '<div class="card p-5">' +
+        '<span class="grid h-11 w-11 place-items-center rounded-xl bg-tint">' + icon(d.icon, "h-6 w-6 text-primary") + '</span>' +
+        '<h3 class="mt-3 font-bold">' + esc(d.tieuDe) + '</h3>' +
+        '<p class="mt-1 text-sm leading-relaxed text-fg-muted">' + esc(d.moTa) + '</p>' +
+      '</div>';
+    }).join("") + '</div>';
+  }
+
+  function cotSoSanh(c) {
+    return '<div class="rounded-xl border ' + (c.noiBat ? 'border-2 border-primary-light bg-tint' : 'border-line bg-surface') + ' p-5">' +
+      '<div class="flex flex-wrap items-baseline justify-between gap-2">' +
+        '<h4 class="text-lg font-bold">' + esc(c.ten) + ' <span class="text-sm font-semibold text-fg-muted">' + esc(c.phu) + '</span></h4>' +
+        '<span class="rounded-full ' + (c.noiBat ? 'bg-cta-dark text-white' : 'bg-tint text-primary') + ' px-2.5 py-1 text-[11px] font-bold">' + esc(c.the) + '</span>' +
+      '</div>' +
+      '<dl class="mt-4 space-y-2 text-sm">' + c.dong.map(function (d) {
+        return '<div class="flex justify-between gap-4"><dt class="text-fg-muted">' + esc(d.nhan) + '</dt>' +
+               '<dd class="' + (d.nhanManh ? 'font-display font-extrabold text-cta-dark' : 'font-semibold') + '">' + esc(d.giaTri) + '</dd></div>';
+      }).join("") + '</dl>' +
+      (c.ghiChu ? '<p class="mt-4 rounded-lg bg-primary/10 p-3 text-sm font-medium text-primary-dark">' + esc(c.ghiChu) + '</p>' : '') +
+    '</div>';
+  }
+
+  /* ═══════════ DỰNG TOÀN BỘ TRANG ═══════════ */
+  var L = C.lienHe, K = C.khuyenMai, F = C.form;
+  var telHref = "tel:" + esc(L.hotlineBam || L.hotline);
+
+  var html = '' +
+
+  /* ── Thanh khuyến mãi + đếm ngược + header (dính trên cùng) ── */
+  '<div class="sticky top-0 z-50">' +
+    '<div class="bg-gradient-to-r from-cta-hot via-cta to-cta-hot">' +
+      '<div class="container-x flex flex-wrap items-center justify-center gap-x-3 gap-y-1 py-1.5 text-center sm:gap-x-4 sm:py-2">' +
+        '<p class="text-xs font-bold text-white sm:text-base">' +
+          '<span class="glow-dot mr-1 inline-block h-2 w-2 rounded-full bg-white align-middle"></span>' +
+          'SALE 24H – GIẢM ' + esc(K.giamToiDa) + '</p>' +
+        '<div id="countdown" role="timer" aria-live="off" class="flex items-center gap-1 font-display text-xs font-extrabold tabular-nums text-white sm:gap-1.5 sm:text-base">' +
+          '<span class="rounded-md bg-black/30 px-1.5 py-0.5 sm:px-2 sm:py-1"><span id="cd-h">--</span><span class="ml-0.5 text-[10px] font-semibold opacity-85">GIỜ</span></span>' +
+          '<span class="opacity-70">:</span>' +
+          '<span class="rounded-md bg-black/30 px-1.5 py-0.5 sm:px-2 sm:py-1"><span id="cd-m">--</span><span class="ml-0.5 text-[10px] font-semibold opacity-85">PHÚT</span></span>' +
+          '<span class="opacity-70">:</span>' +
+          '<span class="rounded-md bg-black/30 px-1.5 py-0.5 sm:px-2 sm:py-1"><span id="cd-s">--</span><span class="ml-0.5 text-[10px] font-semibold opacity-85">GIÂY</span></span>' +
+        '</div>' +
+        '<p class="sr-only text-xs text-white/90 sm:not-sr-only">Kết thúc lúc <time id="cd-deadline">…</time></p>' +
+      '</div>' +
+    '</div>' +
+
+    '<header class="border-b border-line bg-surface/95 backdrop-blur-md">' +
+      '<div class="container-x flex h-14 items-center justify-between gap-4 sm:h-16">' +
+        '<a href="#top" class="flex items-center gap-2.5" aria-label="' + esc(C.thuongHieu.ten + C.thuongHieu.tenMau) + ' – về đầu trang">' +
+          dauHieu("h-10 w-10 sm:h-11 sm:w-11") +
+          '<span class="leading-none">' +
+            '<span class="block font-display text-lg font-extrabold tracking-tight">' + esc(C.thuongHieu.ten) + '<span class="text-brand">' + esc(C.thuongHieu.tenMau) + '</span></span>' +
+            (C.thuongHieu.khauHieu ? '<span class="mt-0.5 hidden text-[11px] font-medium text-fg-muted sm:block">' + esc(C.thuongHieu.khauHieu) + '</span>' : '') +
+          '</span>' +
+        '</a>' +
+        '<nav aria-label="Chuyển nhanh" class="hidden items-center gap-6 text-sm font-semibold text-fg-muted lg:flex">' +
+          '<a class="whitespace-nowrap transition hover:text-brand" href="#san-pham">Sản phẩm</a>' +
+          '<a class="whitespace-nowrap transition hover:text-brand" href="#' + esc(C.gioiThieuA.id) + '">' + esc(C.gioiThieuA.navNhan || C.gioiThieuA.nhanNho) + '</a>' +
+          '<a class="whitespace-nowrap transition hover:text-brand" href="#' + esc(C.gioiThieuB.id) + '">' + esc(C.gioiThieuB.navNhan || C.gioiThieuB.nhanNho) + '</a>' +
+          '<a class="whitespace-nowrap transition hover:text-brand" href="#cam-ket">Cam kết</a>' +
+        '</nav>' +
+        '<div class="flex items-center gap-2">' +
+          '<a href="' + telHref + '" class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 whitespace-nowrap rounded-lg border border-line-2 px-3 text-sm font-bold transition hover:border-brand hover:bg-tint sm:px-4">' +
+            icon("phone", "h-4 w-4 text-brand") +
+            '<span class="hidden sm:inline">' + esc(L.hotline) + '</span><span class="sm:hidden">Gọi</span></a>' +
+          '<a href="#dat-hang" class="btn-cta-sm hidden whitespace-nowrap sm:inline-flex">Mua Ngay</a>' +
+        '</div>' +
+      '</div>' +
+    '</header>' +
+  '</div>' +
+
+  '<main id="top">' +
+
+  /* ── Hero ── */
+  '<section class="grid-bg border-b border-line">' +
+    '<div class="container-x grid items-center gap-12 py-16 lg:grid-cols-12 lg:py-24">' +
+      '<div class="lg:col-span-6">' +
+        '<p class="eyebrow">' + icon("tia", "h-3.5 w-3.5") + esc(K.nhanNho) + '</p>' +
+        // Dấu cách sau <br> là cố ý: trên mobile thẻ <br> bị ẩn, không có nó thì hai dòng dính liền nhau
+        '<h1 class="mt-5 text-4xl font-extrabold leading-[1.08] sm:text-5xl lg:text-6xl">' + esc(K.tieuDe) +
+          '<br class="hidden sm:block"> <span class="bg-gradient-to-r from-primary-light via-primary to-primary-dark bg-clip-text text-transparent">' + esc(K.tieuDeNhanManh) + '</span></h1>' +
+        '<p class="mt-5 max-w-xl text-lg leading-relaxed text-fg-muted">' + esc(K.moTa) + '</p>' +
+        // flex-wrap + whitespace-nowrap: thiếu chỗ thì 2 nút xuống hàng nguyên khối, không bẻ chữ giữa nút
+        '<div class="mt-8 flex flex-col flex-wrap gap-3 sm:flex-row">' +
+          '<a href="#dat-hang" class="btn-cta w-full whitespace-nowrap sm:w-auto">Mua Ngay – Nhận Giá Sốc' + icon("mui", "h-5 w-5") + '</a>' +
+          '<a href="#san-pham" class="btn-ghost w-full whitespace-nowrap sm:w-auto">Xem sản phẩm</a>' +
+        '</div>' +
+        '<dl class="mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-line pt-6">' +
+          (K.soLieu || []).map(function (s) {
+            return '<div><dt class="text-xs text-fg-muted">' + esc(s.nhan) + '</dt>' +
+                   '<dd class="font-display text-xl font-extrabold text-primary sm:text-2xl">' + esc(s.giaTri) + '</dd></div>';
+          }).join("") +
+        '</dl>' +
+      '</div>' +
+      '<div class="lg:col-span-6">' +
+        '<div class="relative mx-auto max-w-lg rounded-3xl border border-line bg-surface p-6 shadow-[0_24px_60px_-24px_rgb(15_23_42/.22)]">' +
+          '<span class="absolute -top-3 left-6 rounded-full bg-cta-dark px-3 py-1 text-xs font-extrabold text-white">HOT DEAL</span>' +
+          '<div class="rounded-2xl bg-tint p-4">' + anhSanPham(C.sanPham[0] || {}, "hero") + '</div>' +
+          '<div class="mt-5 grid grid-cols-3 gap-2 text-center text-[11px] font-semibold text-fg-muted">' +
+            '<p class="rounded-lg bg-bg py-2">Chính hãng</p><p class="rounded-lg bg-bg py-2">Bảo hành 24T</p><p class="rounded-lg bg-bg py-2">Lắp đặt miễn phí</p>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+  '</section>' +
+
+  /* ── Danh sách sản phẩm ── */
+  '<section id="san-pham" class="border-b border-line bg-surface py-16 lg:py-24" aria-labelledby="sp-title">' +
+    '<div class="container-x">' +
+      '<div class="mx-auto max-w-2xl text-center">' +
+        '<p class="eyebrow">Giá sốc 24 giờ</p>' +
+        '<h2 id="sp-title" class="mt-4 text-3xl font-extrabold sm:text-4xl">' + C.sanPham.length + ' sản phẩm được săn đón nhất</h2>' +
+        '<p class="mt-3 text-fg-muted">Đặt trước – giữ giá – thanh toán khi nhận hàng.</p>' +
+      '</div>' +
+      '<div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">' + C.sanPham.map(theSanPham).join("") + '</div>' +
+      '<p class="mt-6 text-center text-xs text-fg-muted">Giá đã bao gồm VAT. Ưu đãi áp dụng trong thời gian đếm ngược hoặc đến khi hết số lượng phân bổ.</p>' +
+    '</div>' +
+  '</section>' +
+
+  /* ── Giới thiệu công nghệ + bảng so sánh ── */
+  '<section id="' + esc(C.gioiThieuA.id) + '" class="border-b border-line py-16 lg:py-24" aria-labelledby="ga-title">' +
+    '<div class="container-x grid gap-12 lg:grid-cols-2 lg:items-start">' +
+      '<div>' +
+        '<p class="eyebrow">' + esc(C.gioiThieuA.nhanNho) + '</p>' +
+        '<h2 id="ga-title" class="mt-4 text-3xl font-extrabold sm:text-4xl">' + esc(C.gioiThieuA.tieuDe) + '</h2>' +
+        '<p class="mt-4 text-lg leading-relaxed text-fg-muted">' + esc(C.gioiThieuA.moTa) + '</p>' +
+        khoiDiemManh(C.gioiThieuA.diemManh, "sm:grid-cols-2") +
+      '</div>' +
+      '<div class="card p-6 sm:p-8">' +
+        '<h3 class="text-2xl font-bold">' + esc(C.soSanh.tieuDe) + '</h3>' +
+        '<p class="mt-2 text-sm text-fg-muted">' + esc(C.soSanh.moTa) + '</p>' +
+        '<div class="mt-6 space-y-4">' + C.soSanh.cot.map(cotSoSanh).join("") + '</div>' +
+        '<a href="#dat-hang" class="btn-cta mt-6 w-full">Chốt đơn ngay</a>' +
+      '</div>' +
+    '</div>' +
+  '</section>' +
+
+  /* ── Giới thiệu sản phẩm khối 2 ── */
+  '<section id="' + esc(C.gioiThieuB.id) + '" class="border-b border-line bg-surface py-16 lg:py-24" aria-labelledby="gb-title">' +
+    '<div class="container-x">' +
+      '<div class="mx-auto max-w-2xl text-center">' +
+        '<p class="eyebrow">' + esc(C.gioiThieuB.nhanNho) + '</p>' +
+        '<h2 id="gb-title" class="mt-4 text-3xl font-extrabold sm:text-4xl">' + esc(C.gioiThieuB.tieuDe) + '</h2>' +
+        '<p class="mt-4 text-lg text-fg-muted">' + esc(C.gioiThieuB.moTa) + '</p>' +
+      '</div>' +
+      khoiDiemManh(C.gioiThieuB.diemManh, "mt-12! md:grid-cols-3") +
+      '<div class="mt-8 grid gap-6 rounded-2xl border border-line bg-tint p-6 sm:p-8 md:grid-cols-2 md:items-center">' +
+        '<div><h3 class="text-2xl font-bold">' + esc(C.gioiThieuB.khoiPhu.tieuDe) + '</h3>' +
+        '<p class="mt-3 leading-relaxed text-fg-muted">' + esc(C.gioiThieuB.khoiPhu.moTa) + '</p></div>' +
+        '<ul class="grid gap-3 text-sm">' + C.gioiThieuB.khoiPhu.danhSach.map(function (t, i) {
+          return '<li class="flex items-center gap-3 rounded-xl bg-surface p-4">' +
+                 '<span class="font-display text-xl font-extrabold text-primary">0' + (i + 1) + '</span>' + esc(t) + '</li>';
+        }).join("") + '</ul>' +
+      '</div>' +
+    '</div>' +
+  '</section>' +
+
+  /* ── Cam kết ── */
+  '<section id="cam-ket" class="border-b border-line py-16 lg:py-24" aria-labelledby="ck-title">' +
+    '<div class="container-x">' +
+      '<div class="mx-auto max-w-2xl text-center">' +
+        '<p class="eyebrow">Vì sao mua tại ' + esc(C.thuongHieu.ten + C.thuongHieu.tenMau) + '</p>' +
+        '<h2 id="ck-title" class="mt-4 text-3xl font-extrabold sm:text-4xl">' + C.camKet.length + ' cam kết bằng văn bản</h2>' +
+      '</div>' +
+      '<div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">' + C.camKet.map(function (ck) {
+        return '<div class="card p-6 text-center">' +
+          '<span class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-tint">' + icon(ck.icon, "h-7 w-7 text-primary") + '</span>' +
+          '<h3 class="mt-4 text-lg font-bold">' + esc(ck.tieuDe) + '</h3>' +
+          '<p class="mt-2 text-sm text-fg-muted">' + esc(ck.moTa) + '</p></div>';
+      }).join("") + '</div>' +
+      '<div class="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 rounded-2xl border border-line bg-surface px-6 py-5 text-sm font-semibold text-fg-muted">' +
+        C.camKetPhu.map(function (t) {
+          return '<span class="flex items-center gap-2">' + TICK("h-5 w-5 text-ok") + esc(t) + '</span>';
+        }).join("") +
+      '</div>' +
+    '</div>' +
+  '</section>' +
+
+  /* ── Form đặt hàng ── */
+  '<section id="dat-hang" class="grid-bg py-16 lg:py-24" aria-labelledby="form-title">' +
+    '<div class="container-x grid gap-10 lg:grid-cols-2 lg:items-start">' +
+      '<div class="lg:pt-6">' +
+        '<p class="eyebrow">' + esc(F.nhanNho) + '</p>' +
+        '<h2 id="form-title" class="mt-4 text-3xl font-extrabold sm:text-4xl lg:text-5xl">' + esc(F.tieuDe) +
+          '<br><span class="text-primary">' + esc(F.tieuDeNhanManh) + '</span></h2>' +
+        '<p class="mt-4 text-lg text-fg-muted">' + esc(F.moTa) + '</p>' +
+        '<ul class="mt-8 space-y-3 text-fg-muted">' + F.loiHua.map(function (t) {
+          return '<li class="flex gap-3">' + TICK("mt-0.5 h-5 w-5 shrink-0 text-ok") + esc(t) + '</li>';
+        }).join("") + '</ul>' +
+      '</div>' +
+
+      '<div class="card p-6 shadow-[0_24px_60px_-28px_rgb(15_23_42/.28)] sm:p-8">' +
+        (C.thuongHieu.logoDayDu
+          ? '<img src="' + esc(C.thuongHieu.logoDayDu) + '" alt="Logo ' + esc(C.thuongHieu.ten + C.thuongHieu.tenMau) + '" ' +
+            'class="mx-auto mb-6 h-24 w-auto object-contain" onerror="this.remove()">'
+          : '') +
+        '<div id="error-summary" tabindex="-1" role="alert" hidden class="mb-6 rounded-xl border border-cta-hot/40 bg-cta-hot/5 p-4">' +
+          '<h3 class="font-bold text-danger">Vui lòng kiểm tra lại thông tin</h3>' +
+          '<ul id="error-summary-list" class="mt-2 list-inside list-disc space-y-1 text-sm text-danger"></ul>' +
+        '</div>' +
+
+        '<form id="order-form" novalidate class="space-y-5">' +
+          '<div><label for="fullname" class="mb-1.5 block text-sm font-semibold">Họ và tên <span class="text-cta-hot">*</span></label>' +
+            '<input id="fullname" name="fullname" type="text" autocomplete="name" placeholder="Nguyễn Văn An" aria-describedby="fullname-hint fullname-error" class="field-base">' +
+            '<p id="fullname-hint" class="mt-1.5 text-xs text-fg-muted">Ghi đúng tên để nhân viên xác nhận khi giao hàng.</p>' +
+            '<p id="fullname-error" class="mt-1.5 hidden text-sm font-semibold text-danger"></p></div>' +
+
+          '<div><label for="phone" class="mb-1.5 block text-sm font-semibold">Số điện thoại <span class="text-cta-hot">*</span></label>' +
+            '<input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0912 345 678" aria-describedby="phone-hint phone-error" class="field-base">' +
+            '<p id="phone-hint" class="mt-1.5 text-xs text-fg-muted">Số di động Việt Nam 10 chữ số. Ví dụ: 0912345678 hoặc +84912345678.</p>' +
+            '<p id="phone-error" class="mt-1.5 hidden text-sm font-semibold text-danger"></p></div>' +
+
+          '<div><label for="product" class="mb-1.5 block text-sm font-semibold">Sản phẩm quan tâm <span class="text-cta-hot">*</span></label>' +
+            '<select id="product" name="product" aria-describedby="product-error" class="field-base cursor-pointer">' +
+              '<option value="">— Chọn sản phẩm —</option>' +
+              C.sanPham.map(function (sp) {
+                return '<option value="' + esc(sp.ten) + '">' + esc(sp.ten) + ' – ' + tien(sp.giaMoi) + '</option>';
+              }).join("") +
+              '<option value="Tư vấn thêm">Tôi cần tư vấn thêm</option>' +
+            '</select>' +
+            '<p id="product-error" class="mt-1.5 hidden text-sm font-semibold text-danger"></p></div>' +
+
+          '<button type="submit" class="btn-cta w-full">' + esc(F.nutGui) + icon("mui", "h-5 w-5") + '</button>' +
+          '<p class="text-center text-xs text-fg-muted">' + esc(F.ghiChuChanForm) + '</p>' +
+        '</form>' +
+
+        '<div id="success-panel" tabindex="-1" hidden class="py-8 text-center">' +
+          '<span class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-ok/10">' + TICK("h-9 w-9 text-ok") + '</span>' +
+          '<h3 class="mt-5 text-2xl font-extrabold">Đã nhận đơn của bạn!</h3>' +
+          '<p id="success-detail" class="mt-3 text-fg-muted"></p>' +
+          '<a href="' + telHref + '" class="btn-ghost mt-6">Cần gấp? Gọi ' + esc(L.hotline) + '</a>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+  '</section>' +
+  '</main>' +
+
+  /* ── Chân trang ── */
+  '<footer class="bg-dark py-12 pb-28 text-slate-300 md:pb-12">' +
+    '<div class="container-x grid gap-8 sm:grid-cols-2 lg:grid-cols-4">' +
+      '<div>' +
+        '<div class="flex items-center gap-3">' + dauHieu("h-12 w-12") +
+          '<span class="leading-none"><span class="block font-display text-lg font-extrabold text-white">' + esc(C.thuongHieu.ten) + '<span class="text-[#D98570]">' + esc(C.thuongHieu.tenMau) + '</span></span>' +
+          (C.thuongHieu.khauHieu ? '<span class="mt-1 block text-[11px] text-slate-400">' + esc(C.thuongHieu.khauHieu) + '</span>' : '') +
+          '</span></div>' +
+        '<p class="mt-4 text-sm leading-relaxed">' + esc(C.thuongHieu.gioiThieu) + '</p></div>' +
+      '<div><h2 class="font-bold text-white">Sản phẩm</h2><ul class="mt-1 text-sm">' +
+        C.sanPham.map(function (sp) {
+          return '<li><a class="inline-flex min-h-11 items-center transition hover:text-primary-light" href="#san-pham">' + esc(sp.ten) + '</a></li>';
+        }).join("") + '</ul></div>' +
+      '<div><h2 class="font-bold text-white">Hỗ trợ</h2><ul class="mt-1 text-sm">' +
+        '<li><a class="inline-flex min-h-11 items-center transition hover:text-primary-light" href="#cam-ket">Chính sách bảo hành</a></li>' +
+        '<li><a class="inline-flex min-h-11 items-center transition hover:text-primary-light" href="#cam-ket">Vận chuyển &amp; lắp đặt</a></li>' +
+        '<li><a class="inline-flex min-h-11 items-center transition hover:text-primary-light" href="#dat-hang">Đặt hàng &amp; tư vấn</a></li>' +
+        '</ul></div>' +
+      '<div><h2 class="font-bold text-white">Liên hệ</h2><ul class="mt-1 text-sm">' +
+        '<li class="flex min-h-11 flex-wrap items-center gap-1">Hotline: <a class="font-semibold text-primary-light" href="' + telHref + '">' + esc(L.hotline) + '</a></li>' +
+        (L.zalo ? '<li class="flex min-h-11 items-center">Zalo: <a class="ml-1 font-semibold text-primary-light" href="https://zalo.me/' + esc(L.zalo) + '">' + esc(L.zalo) + '</a></li>' : '') +
+        (L.email ? '<li class="flex min-h-11 items-center">Email: <a class="ml-1 text-primary-light" href="mailto:' + esc(L.email) + '">' + esc(L.email) + '</a></li>' : '') +
+        (L.diaChi ? '<li class="flex min-h-11 items-center">' + esc(L.diaChi) + '</li>' : '') +
+        (L.gioLamViec ? '<li class="flex min-h-11 items-center">' + esc(L.gioLamViec) + '</li>' : '') +
+        (L.facebook ? '<li class="flex min-h-11 items-center"><a class="text-primary-light" href="' + esc(L.facebook) + '">Facebook</a></li>' : '') +
+        '</ul></div>' +
+    '</div>' +
+    '<div class="container-x mt-8 border-t border-white/15 pt-6 text-center text-xs text-slate-400">' +
+      '© <span id="year"></span> ' + esc(C.thuongHieu.ten + C.thuongHieu.tenMau) + '. ' + esc(C.chanTrang) + '</div>' +
+  '</footer>' +
+
+  /* ── Thanh CTA cố định trên mobile ── */
+  '<div class="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-surface/97 p-3 backdrop-blur-md md:hidden" style="padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));">' +
+    '<div class="flex gap-2.5">' +
+      '<a href="' + telHref + '" aria-label="Gọi hotline ' + esc(L.hotline) + '" class="grid min-h-[54px] w-14 shrink-0 cursor-pointer place-items-center rounded-xl border border-line-2 bg-surface">' + icon("phone", "h-5 w-5 text-primary") + '</a>' +
+      '<a href="#dat-hang" class="btn-cta flex-1">Mua Ngay – Giảm ' + esc(K.giamToiDa) + '</a>' +
+    '</div>' +
+  '</div>' +
+
+  /* ── Popup xem ảnh lớn (dùng chung cho mọi sản phẩm) ── */
+  '<div id="hopanh" role="dialog" aria-modal="true" aria-labelledby="hopanh-ten" ' +
+       'class="fixed inset-0 z-[100] items-center justify-center bg-black/85 p-4 backdrop-blur-sm">' +
+    '<p id="hopanh-ten" class="absolute left-4 right-16 top-4 truncate text-sm font-semibold text-white/90"></p>' +
+    '<button id="hopanh-dong" type="button" aria-label="Đóng ảnh" ' +
+      'class="absolute right-3 top-3 grid h-12 w-12 cursor-pointer place-items-center rounded-full bg-white/15 text-white transition hover:bg-white/30">' +
+      icon("dong", "h-6 w-6") + '</button>' +
+    '<button id="hopanh-truoc" type="button" aria-label="Ảnh trước" ' +
+      'class="absolute left-2 grid h-12 w-12 cursor-pointer place-items-center rounded-full bg-white/15 text-white transition hover:bg-white/30 sm:left-5">' +
+      icon("trai", "h-6 w-6") + '</button>' +
+    '<img id="hopanh-anh" src="" alt="" class="max-h-[82vh] max-w-[92vw] rounded-lg object-contain">' +
+    '<button id="hopanh-sau" type="button" aria-label="Ảnh tiếp theo" ' +
+      'class="absolute right-2 grid h-12 w-12 cursor-pointer place-items-center rounded-full bg-white/15 text-white transition hover:bg-white/30 sm:right-5">' +
+      icon("phai", "h-6 w-6") + '</button>' +
+    '<p id="hopanh-dem" aria-live="polite" ' +
+      'class="absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full bg-white/15 px-4 py-1.5 text-sm font-semibold text-white"></p>' +
+  '</div>';
+
+  document.getElementById("app").innerHTML = html;
+
+  /* ═══════════ ĐỒNG HỒ ĐẾM NGƯỢC ═══════════ */
+  var KEY = "novatech_promo_deadline";
+  var DURATION = (Number(K.soGioDemNguoc) || 24) * 60 * 60 * 1000;
+
+  function layHanChot() {
+    var saved = null;
+    try { saved = localStorage.getItem(KEY); } catch (e) {}
+    var t = saved ? parseInt(saved, 10) : NaN;
+    if (!t || isNaN(t) || t <= Date.now()) {
+      t = Date.now() + DURATION;
+      try { localStorage.setItem(KEY, String(t)); } catch (e) {}
+    }
+    return t;
+  }
+
+  var hanChot = layHanChot();
+  var elH = document.getElementById("cd-h"), elM = document.getElementById("cd-m"), elS = document.getElementById("cd-s");
+  function pad(n) { return n < 10 ? "0" + n : String(n); }
+
+  var d = new Date(hanChot);
+  var elDl = document.getElementById("cd-deadline");
+  elDl.textContent = pad(d.getHours()) + ":" + pad(d.getMinutes()) + " ngày " + pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + "/" + d.getFullYear();
+  elDl.setAttribute("datetime", d.toISOString());
+
+  var timerId = null;
+  function tick() {
+    var left = hanChot - Date.now();
+    if (left <= 0) {
+      elH.textContent = elM.textContent = elS.textContent = "00";
+      if (timerId) { clearInterval(timerId); timerId = null; }
+      return;
+    }
+    var s = Math.floor(left / 1000);
+    elH.textContent = pad(Math.floor(s / 3600));
+    elM.textContent = pad(Math.floor((s % 3600) / 60));
+    elS.textContent = pad(s % 60);
+  }
+  tick();
+  timerId = setInterval(tick, 1000);
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) { if (timerId) { clearInterval(timerId); timerId = null; } }
+    else if (!timerId) { tick(); timerId = setInterval(tick, 1000); }
+  });
+
+  /* ═══════════ POPUP XEM ẢNH LỚN ═══════════ */
+  var hop      = document.getElementById("hopanh");
+  var hopAnh   = document.getElementById("hopanh-anh");
+  var hopTen   = document.getElementById("hopanh-ten");
+  var hopDem   = document.getElementById("hopanh-dem");
+  var nutTruoc = document.getElementById("hopanh-truoc");
+  var nutSau   = document.getElementById("hopanh-sau");
+  var nutDong  = document.getElementById("hopanh-dong");
+
+  var dsAnh = [], viTri = 0, nutGoiMo = null;
+
+  function veAnh() {
+    hopAnh.src = dsAnh[viTri];
+    hopAnh.alt = hopTen.textContent + " – ảnh " + (viTri + 1) + " trên " + dsAnh.length;
+    hopDem.textContent = (viTri + 1) + " / " + dsAnh.length;
+    var nhieuAnh = dsAnh.length > 1;
+    nutTruoc.hidden = !nhieuAnh;
+    nutSau.hidden = !nhieuAnh;
+    hopDem.hidden = !nhieuAnh;
+  }
+
+  function moHop(ds, ten, batDau, nguon) {
+    if (!ds || !ds.length) return;
+    dsAnh = ds; viTri = batDau > 0 ? batDau : 0; nutGoiMo = nguon || null;
+    hopTen.textContent = ten || "";
+    veAnh();
+    hop.setAttribute("data-mo", "1");
+    document.body.style.overflow = "hidden";
+    nutDong.focus();
+  }
+
+  function dongHop() {
+    hop.removeAttribute("data-mo");
+    document.body.style.overflow = "";
+    hopAnh.removeAttribute("src");
+    if (nutGoiMo) { nutGoiMo.focus(); nutGoiMo = null; }
+  }
+
+  function chuyenAnh(buoc) {
+    if (dsAnh.length < 2) return;
+    viTri = (viTri + buoc + dsAnh.length) % dsAnh.length;
+    veAnh();
+  }
+
+  // Bấm vào ảnh chính trên thẻ sản phẩm -> mở popup đúng ảnh đang hiển thị
+  Array.prototype.forEach.call(document.querySelectorAll("[data-phongto]"), function (nut) {
+    nut.addEventListener("click", function () {
+      var ds;
+      try { ds = JSON.parse(nut.getAttribute("data-phongto")); } catch (e) { return; }
+      var img = nut.querySelector("img");
+      // Nếu ảnh lỗi không tải được thì không mở popup
+      if (!img || img.hidden || !img.naturalWidth) return;
+      var dangXem = img.getAttribute("src");
+      var k = ds.indexOf(dangXem);
+      moHop(ds, nut.getAttribute("data-ten"), k < 0 ? 0 : k, nut);
+    });
+  });
+
+  nutDong.addEventListener("click", dongHop);
+  nutTruoc.addEventListener("click", function () { chuyenAnh(-1); });
+  nutSau.addEventListener("click", function () { chuyenAnh(1); });
+
+  // Bấm ra nền tối để đóng (không tính khi bấm trúng ảnh hay các nút)
+  hop.addEventListener("click", function (e) { if (e.target === hop) dongHop(); });
+
+  document.addEventListener("keydown", function (e) {
+    if (hop.getAttribute("data-mo") !== "1") return;
+    if (e.key === "Escape") { dongHop(); return; }
+    if (e.key === "ArrowLeft")  { chuyenAnh(-1); return; }
+    if (e.key === "ArrowRight") { chuyenAnh(1); return; }
+    if (e.key === "Tab") {
+      // Giữ tiêu điểm quanh quẩn trong popup, không lọt ra trang phía sau
+      var co = [nutDong, nutTruoc, nutSau].filter(function (n) { return !n.hidden; });
+      var dau = co[0], cuoi = co[co.length - 1];
+      if (e.shiftKey && document.activeElement === dau) { e.preventDefault(); cuoi.focus(); }
+      else if (!e.shiftKey && document.activeElement === cuoi) { e.preventDefault(); dau.focus(); }
+    }
+  });
+
+  /* ═══════════ BẤM Ô ẢNH NHỎ ĐỂ ĐỔI ẢNH CHÍNH ═══════════ */
+  Array.prototype.forEach.call(document.querySelectorAll("[data-anh]"), function (o) {
+    o.addEventListener("click", function () {
+      var chinh = document.getElementById(o.getAttribute("data-dich"));
+      if (!chinh) return;
+      chinh.hidden = false;
+      chinh.src = o.getAttribute("data-anh");
+      // Đánh dấu ô đang chọn
+      var anhEm = o.parentElement.querySelectorAll("[data-anh]");
+      Array.prototype.forEach.call(anhEm, function (b) {
+        b.classList.remove("border-primary");
+        b.classList.add("border-line", "hover:border-primary-light");
+        b.removeAttribute("aria-current");
+      });
+      o.classList.add("border-primary");
+      o.classList.remove("border-line", "hover:border-primary-light");
+      o.setAttribute("aria-current", "true");
+    });
+  });
+
+  /* ═══════════ CHỌN NHANH SẢN PHẨM ═══════════ */
+  var select = document.getElementById("product");
+  Array.prototype.forEach.call(document.querySelectorAll("[data-chon]"), function (btn) {
+    btn.addEventListener("click", function () {
+      select.value = btn.getAttribute("data-chon");
+      xoaLoi(select);
+    });
+  });
+
+  /* ═══════════ KIỂM TRA FORM ═══════════ */
+  var form = document.getElementById("order-form");
+  var summary = document.getElementById("error-summary");
+  var summaryList = document.getElementById("error-summary-list");
+  var successPanel = document.getElementById("success-panel");
+  var successDetail = document.getElementById("success-detail");
+
+  var PHONE_RE = /^(0|\+84|84)(3|5|7|8|9)\d{8}$/;
+
+  var LUAT = {
+    fullname: function (v) {
+      if (!v) return "Vui lòng nhập họ và tên.";
+      if (v.length < 2) return "Họ tên quá ngắn, vui lòng nhập đầy đủ.";
+      return "";
+    },
+    phone: function (v) {
+      if (!v) return "Vui lòng nhập số điện thoại.";
+      if (!PHONE_RE.test(v.replace(/[\s.()-]/g, ""))) return "Số điện thoại không đúng định dạng. Ví dụ hợp lệ: 0912345678.";
+      return "";
+    },
+    product: function (v) { return v ? "" : "Vui lòng chọn sản phẩm bạn quan tâm."; }
+  };
+
+  var O = ["fullname", "phone", "product"];
+  function nodeLoi(f) { return document.getElementById(f.id + "-error"); }
+
+  function hienLoi(f, msg) {
+    f.setAttribute("aria-invalid", "true");
+    var n = nodeLoi(f); n.textContent = msg; n.classList.remove("hidden");
+  }
+  function xoaLoi(f) {
+    f.removeAttribute("aria-invalid");
+    var n = nodeLoi(f); n.textContent = ""; n.classList.add("hidden");
+  }
+  function kiemTra(f) {
+    var msg = LUAT[f.id](f.value.trim());
+    if (msg) hienLoi(f, msg); else xoaLoi(f);
+    return msg;
+  }
+
+  O.forEach(function (id) {
+    var f = document.getElementById(id);
+    f.addEventListener("blur", function () { kiemTra(f); });
+    f.addEventListener("input", function () {
+      if (f.getAttribute("aria-invalid") === "true" && !LUAT[f.id](f.value.trim())) xoaLoi(f);
+    });
+    f.addEventListener("change", function () {
+      if (f.getAttribute("aria-invalid") === "true") kiemTra(f);
+    });
+  });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var loi = [];
+    O.forEach(function (id) {
+      var f = document.getElementById(id);
+      var msg = kiemTra(f);
+      if (msg) loi.push({ id: id, msg: msg });
+    });
+
+    if (loi.length) {
+      summaryList.innerHTML = "";
+      loi.forEach(function (er) {
+        var li = document.createElement("li"), a = document.createElement("a");
+        a.href = "#" + er.id; a.textContent = er.msg;
+        a.className = "cursor-pointer underline underline-offset-2";
+        a.addEventListener("click", function (ev) { ev.preventDefault(); document.getElementById(er.id).focus(); });
+        li.appendChild(a); summaryList.appendChild(li);
+      });
+      summary.hidden = false;
+      summary.focus();
+      return;
+    }
+
+    summary.hidden = true;
+
+    // ► GỬI ĐƠN VỀ HỆ THỐNG CỦA BẠN TẠI ĐÂY, ví dụ:
+    //   fetch("/api/orders", { method: "POST", body: new FormData(form) });
+
+    var ten = document.getElementById("fullname").value.trim();
+    var sp = select.options[select.selectedIndex].text;
+    form.hidden = true;
+    successDetail.textContent = "Cảm ơn " + ten + "! Tư vấn viên sẽ gọi lại trong 5 phút để xác nhận đơn hàng: " + sp + ".";
+    successPanel.hidden = false;
+    successPanel.focus();
+  });
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  } catch (err) { baoLoiCauHinh(err); }
+
+  /* Thay vì để trang trắng, hiện hẳn thông báo chỉ rõ chỗ sai */
+  function baoLoiCauHinh(err) {
+    var app = document.getElementById("app");
+    if (!app) return;
+    app.innerHTML =
+      '<div style="max-width:680px;margin:48px auto;padding:28px;border:2px solid #DC2626;' +
+      'border-radius:16px;background:#FEF2F2;font-family:system-ui,sans-serif;color:#0F172A">' +
+        '<h1 style="margin:0 0 10px;font-size:22px;color:#B91C1C">Trang chưa hiện được — có lỗi trong khối CAU_HINH</h1>' +
+        '<p style="margin:0 0 16px;color:#475569;line-height:1.6">Bạn vừa sửa nội dung ở đầu file <b>index.html</b> và có chỗ sai cú pháp. Sửa xong lưu lại rồi tải lại trang là được.</p>' +
+        '<p style="margin:0 0 8px;font-weight:700">Báo lỗi của trình duyệt:</p>' +
+        '<pre style="margin:0 0 18px;padding:12px;background:#0F172A;color:#FCA5A5;border-radius:8px;' +
+        'overflow-x:auto;font-size:13px;white-space:pre-wrap">' +
+        String(err && err.message || err).replace(/[<&]/g, function (c) { return c === "<" ? "&lt;" : "&amp;"; }) +
+        '</pre>' +
+        '<p style="margin:0 0 8px;font-weight:700">Ba lỗi hay gặp nhất:</p>' +
+        '<ol style="margin:0;padding-left:20px;color:#475569;line-height:1.9">' +
+          '<li>Giá viết có dấu chấm mà quên nháy kép: <code style="background:#E2E8F0;padding:2px 6px;border-radius:4px">giaMoi: 9.990.000</code> → sửa thành <code style="background:#DCFCE7;padding:2px 6px;border-radius:4px">giaMoi: 9990000</code></li>' +
+          '<li>Thiếu dấu phẩy ở cuối một dòng</li>' +
+          '<li>Thiếu dấu ngoặc <code style="background:#E2E8F0;padding:2px 6px;border-radius:4px">}</code> hoặc <code style="background:#E2E8F0;padding:2px 6px;border-radius:4px">]</code> khi thêm sản phẩm mới</li>' +
+        '</ol>' +
+      '</div>';
+  }
+})();
+</script>
+</body>
+</html>

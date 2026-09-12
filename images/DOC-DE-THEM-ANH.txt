@@ -1,0 +1,63 @@
+THU MUC ANH CUA LANDING PAGE
+============================
+
+=== QUY TRINH THEM ANH SAN PHAM (4 buoc) ===
+
+BUOC 1 - THU NHO ANH TRUOC KHI DUNG
+   Anh chup goc thuong rat nang (5-8MB). Dua thang len web se rat cham.
+   Vao trang  https://squoosh.app  (mien phi, khong can cai):
+     - Keo tha anh vao
+     - Chon dinh dang WebP, chat luong 80
+     - Chinh chieu rong (Resize) ve 900px
+     - Bam Download
+   Muc tieu: moi anh duoi 50KB.
+
+BUOC 2 - DAT TEN DE HIEU, CHEP VAO THU MUC NAY
+   Dat ten khong dau, khong khoang trang. Vi du:
+     dh80n1t-1.webp   (anh chinh)
+     dh80n1t-2.webp   (anh phu)
+     dh80n1t-3.webp
+   Chep tat ca vao thu muc "images" nay.
+
+BUOC 3 - KHAI BAO TRONG index.html
+   Mo index.html, tim muc "4. DANH SACH SAN PHAM", sua san pham tuong ung:
+
+     anh: "images/dh80n1t-1.webp",     <-- anh chinh, hien tren the
+     anhThem: [                         <-- cac anh phu (co the bo qua)
+       "images/dh80n1t-2.webp",
+       "images/dh80n1t-3.webp"
+     ],
+
+   LUU Y DAU CAU:
+     - Moi duong dan boc trong dau nhay kep "..."
+     - Giua cac dong trong ngoac vuong co dau phay ,
+     - DONG CUOI CUNG trong ngoac vuong KHONG co dau phay
+     - Sau dau ngoac vuong dong ] phai co dau phay ,
+
+BUOC 4 - LUU FILE, MO LAI TRANG
+   Neu co tu 2 anh tro len, trang tu hien day o vuong nho ben duoi anh chinh.
+   Bam vao o nao thi anh chinh doi sang anh do.
+
+=== POPUP XEM ANH LON ===
+   Bam vao anh chinh tren the san pham -> anh mo to ra giua man hinh.
+   Trong popup:
+     - Mui ten trai/phai hoac phim <- -> : chuyen anh
+     - Bam nen toi, nut X, hoac phim Esc : dong lai
+     - Goc duoi hien so thu tu, vi du "3 / 5"
+   Popup dung chung cho moi san pham, khong phai khai bao gi them.
+   Anh nen rong khoang 1200px de popup hien ro net.
+
+=== CAC TRUONG HOP TU DONG XU LY ===
+   - Chi co 1 anh            -> khong hien day o nho
+   - Duong dan anh sai       -> tu quay ve hinh ve minh hoa, trang khong vo
+   - Mot anh phu bi thieu    -> o vuong cua anh do tu bien mat
+   - Khong khai bao anh nao  -> dung hinh ve minh hoa san co
+
+
+=== FILE LOGO (da tach nen trong suot san) ===
+   logo-mark.png  192x192  - dau hieu hexagon, dung o header + footer
+   logo-full.png  460px    - logo day du ca chu, dung o khoi form dat hang
+   favicon.png     64x64   - bieu tuong hien tren tab trinh duyet
+
+   Doi logo khac: thay the 3 file tren va giu nguyen ten,
+   hoac sua duong dan trong muc "1. THUONG HIEU" o dau index.html.

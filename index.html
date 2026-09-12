@@ -223,12 +223,16 @@ const CAU_HINH = {
     nhanNho: "Bước cuối cùng",
     tieuDe: "Để lại số điện thoại –",
     tieuDeNhanManh: "giữ giá sốc trong 24h",
-    moTa: "Tư vấn viên gọi lại trong 5 phút để xác nhận model và địa chỉ. Bạn chỉ thanh toán khi hàng đã tới tận nhà.",
+    moTa: "Tư vấn viên gọi lại trong 5 phút để xác nhận đơn và hẹn giờ giao. Bạn chỉ thanh toán khi hàng đã tới tận nhà.",
     loiHua: [
       "Không cần đặt cọc, không ràng buộc",
       "Nhận báo giá kèm quà tặng chi tiết qua Zalo",
       "Thông tin của bạn được bảo mật tuyệt đối"
     ],
+    // true  = khách bắt buộc nhập địa chỉ mới gửi được đơn (thông tin đầy đủ hơn)
+    // false = địa chỉ để tuỳ chọn, ai ngại thì bỏ qua (form dễ điền hơn, nhiều đơn hơn)
+    batBuocDiaChi: true,
+
     nutGui: "Đặt Hàng Ngay – Giữ Giá 24H",
     ghiChuChanForm: "Bấm đặt hàng nghĩa là bạn đồng ý để chúng tôi liên hệ tư vấn. Hoàn toàn miễn phí, không phát sinh chi phí."
   },
@@ -800,6 +804,17 @@ const CAU_HINH = {
             '<p id="phone-hint" class="mt-1.5 text-xs text-fg-muted">Số di động Việt Nam 10 chữ số. Ví dụ: 0912345678 hoặc +84912345678.</p>' +
             '<p id="phone-error" class="mt-1.5 hidden text-sm font-semibold text-danger"></p></div>' +
 
+          // Ô địa chỉ. Dùng textarea vì địa chỉ Việt Nam thường dài, gõ một dòng bị khuất chữ.
+          '<div><label for="diachi" class="mb-1.5 block text-sm font-semibold">Địa chỉ giao hàng ' +
+            (F.batBuocDiaChi
+              ? '<span class="text-cta-hot">*</span>'
+              : '<span class="font-normal text-fg-muted">(không bắt buộc)</span>') + '</label>' +
+            '<textarea id="diachi" name="diachi" rows="2" autocomplete="street-address" ' +
+              'placeholder="Số 12, ngõ 34 Quang Trung, P. Hà Cầu, Q. Hà Đông, Hà Nội" ' +
+              'aria-describedby="diachi-hint diachi-error" class="field-base resize-y py-3 leading-snug"></textarea>' +
+            '<p id="diachi-hint" class="mt-1.5 text-xs text-fg-muted">Ghi rõ số nhà, đường, phường/xã, quận/huyện và tỉnh/thành để giao và lắp đặt đúng nơi.</p>' +
+            '<p id="diachi-error" class="mt-1.5 hidden text-sm font-semibold text-danger"></p></div>' +
+
           '<div><label for="product" class="mb-1.5 block text-sm font-semibold">Sản phẩm quan tâm <span class="text-cta-hot">*</span></label>' +
             '<select id="product" name="product" aria-describedby="product-error" class="field-base cursor-pointer">' +
               '<option value="">— Chọn sản phẩm —</option>' +
@@ -1056,10 +1071,16 @@ const CAU_HINH = {
       if (!PHONE_RE.test(v.replace(/[\s.()-]/g, ""))) return "Số điện thoại không đúng định dạng. Ví dụ hợp lệ: 0912345678.";
       return "";
     },
-    product: function (v) { return v ? "" : "Vui lòng chọn sản phẩm bạn quan tâm."; }
+    product: function (v) { return v ? "" : "Vui lòng chọn sản phẩm bạn quan tâm."; },
+    diachi: function (v) {
+      if (!v) return F.batBuocDiaChi ? "Vui lòng nhập địa chỉ giao hàng." : "";
+      // Đã nhập thì phải đủ chi tiết, tránh kiểu gõ cho có "abc" hay "hn"
+      if (v.length < 10) return "Địa chỉ quá ngắn. Ghi rõ số nhà, đường, phường/xã, quận/huyện.";
+      return "";
+    }
   };
 
-  var O = ["fullname", "phone", "product"];
+  var O = ["fullname", "phone", "diachi", "product"];
   function nodeLoi(f) { return document.getElementById(f.id + "-error"); }
 
   function hienLoi(f, msg) {
@@ -1117,8 +1138,10 @@ const CAU_HINH = {
 
     var ten = document.getElementById("fullname").value.trim();
     var sp = select.options[select.selectedIndex].text;
+    var dc = document.getElementById("diachi").value.trim();
     form.hidden = true;
-    successDetail.textContent = "Cảm ơn " + ten + "! Tư vấn viên sẽ gọi lại trong 5 phút để xác nhận đơn hàng: " + sp + ".";
+    successDetail.textContent = "Cảm ơn " + ten + "! Tư vấn viên sẽ gọi lại trong 5 phút để xác nhận đơn hàng: " + sp + "."
+      + (dc ? " Hàng sẽ giao tới: " + dc : "");
     successPanel.hidden = false;
     successPanel.focus();
   });
